@@ -69,7 +69,11 @@ mkdir -p $TEMP_DIR
 
 # Get latest Debian cloud image
 info "Finding latest Debian cloud image..."
-LATEST_URL=$(curl -s https://cloud.debian.org/images/cloud/bookworm/latest/ | grep -o 'href=".*\.qcow2"' | grep generic | cut -d'"' -f2)
+# Get the specific amd64 genericcloud image
+LATEST_URL=$(curl -s https://cloud.debian.org/images/cloud/bookworm/latest/ | grep -o 'href="debian-12-genericcloud-amd64.qcow2"' | head -1 | cut -d'"' -f2)
+if [[ -z "$LATEST_URL" ]]; then
+  error "Could not find Debian cloud image"
+fi
 CLOUD_IMAGE_URL="https://cloud.debian.org/images/cloud/bookworm/latest/$LATEST_URL"
 CLOUD_IMAGE_PATH="$TEMP_DIR/debian-cloud.qcow2"
 
